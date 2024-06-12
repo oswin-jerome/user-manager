@@ -1,6 +1,6 @@
+const { hashPassword } = require("../controllers/authController");
 const { sendOTPMail } = require("../controllers/mailController");
 const { User } = require("../models/User");
-
 const Router = require("express").Router;
 
 const router = Router();
@@ -23,8 +23,8 @@ router.post("/register", async (req, res) => {
       message: "Email already exist",
     });
   }
-
-  const user = new User({ ...data, otp });
+  const password = await hashPassword(data.password);
+  const user = new User({ ...data, otp, password });
   const doc = await user.save();
   if (doc) {
     sendOTPMail(data.email, otp);
