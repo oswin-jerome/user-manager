@@ -1,3 +1,4 @@
+const { sendOTPMail } = require("../controllers/mailController");
 const { User } = require("../models/User");
 
 const Router = require("express").Router;
@@ -5,15 +6,13 @@ const Router = require("express").Router;
 const router = Router();
 
 router.post("/login", (req, res) => {
-  //   new User({
-  //     name: "Oswin",
-  //     email: "oswinjeromej@gmail.com",
-  //   }).save();
   res.send("Login...");
 });
 
 router.post("/register", async (req, res) => {
   const data = req.body;
+  // Generate OTP
+  const otp = Math.floor(1000 + Math.random() * 9000);
 
   const checkUser = await User.findOne({
     email: data.email,
@@ -25,8 +24,11 @@ router.post("/register", async (req, res) => {
     });
   }
 
-  const user = new User(data);
+  const user = new User({ ...data, otp });
   const doc = await user.save();
+  if (doc) {
+    sendOTPMail(data.email, otp);
+  }
   res.send(doc);
 });
 
