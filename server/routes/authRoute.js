@@ -59,7 +59,9 @@ router.post("/register", async (req, res) => {
   if (doc) {
     sendOTPMail(data.email, otp);
   }
-  res.send(doc);
+  res.send({
+    message: "registered",
+  });
 });
 
 router.post("/verify_otp", async (req, res) => {
