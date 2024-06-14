@@ -1,5 +1,6 @@
 const { hashPassword, comparePassword } = require("../controllers/authController");
 const { sendOTPMail } = require("../controllers/mailController");
+const { allowOnlyLoggedInUser } = require("../middlewares/authMiddleware");
 const { User } = require("../models/User");
 const Router = require("express").Router;
 const jwt = require("jsonwebtoken");
@@ -24,6 +25,7 @@ router.post("/login", async (req, res) => {
   const payload = {
     user: {
       id: user.id,
+      email_verified: user.verifiedAt,
     },
   };
 
@@ -32,7 +34,7 @@ router.post("/login", async (req, res) => {
       res.status(500).json({ message: "Something went wrong" });
     }
 
-    res.send({ token });
+    res.send({ token, email_verified: user.verifiedAt });
   });
 });
 
@@ -64,14 +66,11 @@ router.post("/register", async (req, res) => {
   });
 });
 
-router.post("/verify_otp", async (req, res) => {
+router.post("/verify_otp", allowOnlyLoggedInUser, async (req, res) => {
   const otp = req.body.otp;
-  const email = req.body.email;
 
-  const user = await User.findOne({
-    email: email,
-  });
-
+  const user = req.user;
+  console.log(user);
   if (!user) {
     return res.status(401).send({
       message: "Account does not exist",

@@ -6,9 +6,8 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(function (config) {
   const token = localStorage.getItem("token");
-
   if (token) {
-    config.headers.getAuthorization(token);
+    config.headers.Authorization = token;
   }
 
   return config;
@@ -22,6 +21,10 @@ axiosInstance.interceptors.response.use(
     // Remove token if it is invalid
     if (err.response.status === 401) {
       localStorage.removeItem("token");
+    }
+
+    if (err.response.status === 422) {
+      return err;
     }
     return Promise.reject(err);
   }
