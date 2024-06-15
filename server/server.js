@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const authRoute = require("./routes/authRoute");
+const profileRoute = require("./routes/profileRoute");
 var cors = require("cors");
 
 const mongoose = require("mongoose");
@@ -14,6 +15,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use("/auth", authRoute);
+app.use("/profile", allowOnlyLoggedInUser, profileRoute);
 app.get("/", allowOnlyLoggedInUser, (req, res) => {
   res.send("Home");
 });
