@@ -7,6 +7,12 @@ var transporter = nodemailer.createTransport({
     pass: "e2213b61428785",
   },
 });
+
+/**
+ * This function sends an email to user with OTP
+ * @param {string} email
+ * @param {number} otp
+ */
 const sendOTPMail = async (email, otp) => {
   const info = await transporter.sendMail({
     from: '"Admin" <admin@app.com>',

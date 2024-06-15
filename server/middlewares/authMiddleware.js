@@ -1,6 +1,13 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../models/User");
 
+/**
+ *  This middleware checks if user is authenticated by verifying token received in header
+ * @param {object} req
+ * @param {object} res
+ * @param {function} next
+ * @returns
+ */
 const allowOnlyLoggedInUser = async (req, res, next) => {
   const token = req.header("Authorization");
 
