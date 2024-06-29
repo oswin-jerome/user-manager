@@ -45,6 +45,8 @@ function RegisterPage() {
               <Input
                 required
                 type="email"
+                pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"
+                title="Need proper email id"
                 value={data.email}
                 onChange={(e) => {
                   setData({ ...data, email: e.target.value });
@@ -57,6 +59,8 @@ function RegisterPage() {
                 required
                 type="password"
                 value={data.password}
+                pattern=".{8,}"
+                title="Eight or more characters"
                 onChange={(e) => {
                   setData({ ...data, password: e.target.value });
                 }}
