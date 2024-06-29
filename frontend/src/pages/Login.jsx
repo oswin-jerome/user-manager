@@ -10,24 +10,32 @@ function LoginPage() {
 
   const handle = (e) => {
     e.preventDefault();
-    axiosInstance.post("/auth/login", data).then((res) => {
-      console.log(res);
-      if (res.status == 200) {
-        alert("Logged In");
-        localStorage.setItem("token", res.data.token);
-        localStorage.setItem("email_verified", res.data.email_verified);
+    axiosInstance
+      .post("/auth/login", data)
+      .then((res) => {
+        console.log(res);
+        if (res.status == 200) {
+          alert("Logged In");
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("email_verified", res.data.email_verified);
 
-        if (res.data.email_verified == null) {
-          window.location.replace("/verify");
-        } else {
-          window.location.replace("/");
+          if (res.data.email_verified == null) {
+            window.location.replace("/verify");
+          } else {
+            window.location.replace("/");
+          }
         }
-      }
-      setData({
-        email: "",
-        password: "",
+        setData({
+          email: "",
+          password: "",
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status === 400) {
+          alert("Invalid credentials");
+        }
       });
-    });
   };
 
   return (
